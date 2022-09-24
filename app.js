@@ -3,13 +3,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { errors, celebrate, Joi } = require('celebrate');
-// const { login } = require('./controllers/login');
-// const { createUser } = require('./controllers/createUser');
-// const { auth } = require('./middlewares/auth');
+const { login } = require('./controllers/login');
+const { createUser } = require('./controllers/createUser');
+const { auth } = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const moviesRouter = require('./routes/movies');
 const incorrectRouter = require('./routes/incorrectUrl');
-// const { LINK_REGEXP } = require('./utils/constants');
 // const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CODE } = require('./utils/constants');
 
@@ -38,24 +37,22 @@ app.use(express.json());
 
 // app.use(requestLogger);
 
-// app.post('/signin', celebrate({
-//   body: Joi.object().keys({
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required(),
-//   }),
-// }), login);
-//
-// app.post('/signup', celebrate({
-//   body: Joi.object().keys({
-//     email: Joi.string().required().email(),
-//     password: Joi.string().required(),
-//     name: Joi.string().min(2).max(30),
-//     about: Joi.string().min(2).max(30),
-//     avatar: Joi.string().pattern(LINK_REGEXP),
-//   }),
-// }), createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    name: Joi.string().required().min(2).max(30),
+  }),
+}), createUser);
 
-// app.use(auth);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+
+app.use(auth);
 
 app.use('/users', usersRouter);
 app.use('/movies', moviesRouter);
