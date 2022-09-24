@@ -42,7 +42,9 @@ const createMovie = (req, res, next) => {
   })
     .then((movie) => res.status(CODE.SUCCESS_CREATED).send(movie))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.code === 11000) {
+        next(new ApplicationError(CODE.CONFLICT, err.message));
+      } else if (err.name === 'ValidationError') {
         next(new ApplicationError(CODE.NOT_VALID_DATA, `Validation error - ${err.message}`));
       } else {
         next(new ApplicationError());
