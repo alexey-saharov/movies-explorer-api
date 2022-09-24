@@ -9,7 +9,7 @@ const { auth } = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const moviesRouter = require('./routes/movies');
 const incorrectRouter = require('./routes/incorrectUrl');
-// const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CODE } = require('./utils/constants');
 
 // исправить 2ой url
@@ -35,7 +35,7 @@ app.use('*', cors(options));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// app.use(requestLogger);
+app.use(requestLogger);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -59,7 +59,7 @@ app.use('/movies', moviesRouter);
 
 app.use('/', incorrectRouter);
 
-// app.use(errorLogger);
+app.use(errorLogger);
 
 app.use(errors());
 
