@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { errors, celebrate, Joi } = require('celebrate');
@@ -12,11 +14,10 @@ const incorrectRouter = require('./routes/incorrectUrl');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CODE } = require('./utils/constants');
 
-// исправить 2ой url
 const options = {
   origin: [
     'http://localhost:3001',
-    'https://mesto.lexasaharov.nomoredomains.sbs',
+    'https://movies.lexasaharov.nomorepartiesxyz.ru',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
@@ -27,6 +28,15 @@ const options = {
 
 const { PORT = 3000 } = process.env;
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
+
+app.use(helmet());
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 
