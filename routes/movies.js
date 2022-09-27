@@ -1,13 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { LINK_REGEXP, MONGO_ID_REGEXP } = require('../utils/constants');
-
-const method = (value) => {
-  if (value !== value.match(MONGO_ID_REGEXP)[0]) {
-    throw new Error('invalid movieId');
-  }
-  return value;
-};
+const validator = require('validator');
+const { MONGO_ID_REGEXP } = require('../utils/constants');
 
 const {
   getMovies,
@@ -15,27 +9,47 @@ const {
   deleteMovie,
 } = require('../controllers/movies');
 
-router.get('/', getMovies);
+router.get('/movies', getMovies);
 
-router.post('/', celebrate({
+router.post('/movies', celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(LINK_REGEXP),
-    trailerLink: Joi.string().required().pattern(LINK_REGEXP),
-    thumbnail: Joi.string().required().pattern(LINK_REGEXP),
-    movieId: Joi.string().custom(method, 'custom validation'),
+    image: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле image заполнено некорректно');
+    }),
+    trailerLink: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле trailerLink заполнено некорректно');
+    }),
+    thumbnail: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле thumbnail заполнено некорректно');
+    }),
+    movieId: Joi.number(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
 }), createMovie);
 
-router.delete('/:movieId', celebrate({
+router.delete('/movies/:movieId', celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().custom(method, 'custom validation'),
+    movieId: Joi.string().custom((value, helpers) => {
+      if (value === value.match(MONGO_ID_REGEXP)[0]) {
+        return value;
+      }
+      return helpers.message('Поле movieId заполнено некорректно');
+    }),
   }),
 }), deleteMovie);
 

@@ -62,11 +62,11 @@ const deleteMovie = (req, res, next) => {
       if (movie.owner.id !== req.user._id) {
         throw new NoAccess();
       }
-      Movie.findByIdAndRemove(req.params.movieId)
+      return Movie.findByIdAndRemove(req.params.movieId)
         .orFail(() => {
           throw new MovieDeleteError();
         })
-        .then(() => res.send({ message: 'Пост удалён' }));
+        .then(() => res.send({ message: 'Фильм удалён' }));
     })
     .catch((err) => {
       if (err.name === 'MovieNotFound' || err.name === 'NoAccess' || err.name === 'MovieDeleteError') {

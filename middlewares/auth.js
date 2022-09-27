@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { CURRENT_JWT_SECRET } = require('../utils/constants');
+const { CURRENT_JWT_SECRET } = require('../utils/configuration');
 const { NotAuthorized } = require('../errors/notAuthorized');
 
 const auth = (req, res, next) => {
