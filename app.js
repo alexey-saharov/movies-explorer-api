@@ -12,6 +12,7 @@ const { centralizedHandlerErrors } = require('./errors/centralizedHandlerErrors'
 const options = {
   origin: [
     'http://localhost:3001',
+    'http://movies.aas1.ru',
     'https://movies.aas1.ru',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
