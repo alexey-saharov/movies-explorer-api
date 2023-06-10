@@ -1,7 +1,7 @@
 # movies-explorer-api
 
-IP-адрес сервера - 84.252.142.45 \
-бэкенд - https://api.movies.lexasaharov.nomorepartiesxyz.ru
+IP-адрес сервера - 77.232.137.56 \
+бэкенд - https://api.movies.aas1.ru
 
 
 ### Использованы:
