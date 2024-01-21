@@ -62,7 +62,7 @@ const deleteMovie = (req, res, next) => {
       if (movie.owner.id !== req.user._id) {
         throw new NoAccess();
       }
-      return Movie.findByIdAndRemove(req.params.movieId)
+      return Movie.findByIdAndDelete(req.params.movieId)
         .orFail(() => {
           throw new MovieDeleteError();
         })
